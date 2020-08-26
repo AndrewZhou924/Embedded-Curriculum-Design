@@ -47,7 +47,7 @@ def showImgViaTxtFile(fileName, show=True, save=False):
                 cnt2 += 1
     
     print("cnt for write pixel:{}".format(cnt1))
-    print("cnt for balck pixel:{}".format(cnt2))
+    print("cnt for black pixel:{}".format(cnt2))
     
     im = Image.fromarray(np.uint8(data_np))
     
