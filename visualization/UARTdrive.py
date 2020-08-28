@@ -127,7 +127,7 @@ def DReadPort():
 if __name__=="__main__":
     if scene == 1:
 
-        ser,ret=DOpenPort("com3",62500,None)
+        ser,ret=DOpenPort("com8",62500,None)
         if(ret==True):#判断串口是否成功打开
 
             while(1):
