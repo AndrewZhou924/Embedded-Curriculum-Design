@@ -20,3 +20,4 @@ if __name__ == "__main__":
     # result = reader.readtext(args.img, detail=0)
     result = reader.readtext(args.img)
     print(result)
+    
