@@ -1,1 +1,5 @@
 cnnRecognition/app/train_model
+QuickDraw-pytorch/Checkpoints
+QuickDraw-pytorch/Dataset_bak
+QuickDraw-pytorch/Data
+QuickDraw-pytorch/Dataset
