@@ -142,9 +142,6 @@ if __name__ == '__main__':
             cls  = line.split('\t')[0].split(' ')[-1]
             classes.append(cls)
 
-    for c in classes:
-        print(c)
-
     # prepare test data
     # data = Image.open(args.img).convert('L')
     # data = PIL.ImageOps.invert(data)
@@ -153,7 +150,6 @@ if __name__ == '__main__':
     # print(np.array(data))
 
     data = data.resize((args.image_size, args.image_size))
-
     # data.save('./resize_cat.jpg')
 
     data = transforms.ToTensor()(data)
