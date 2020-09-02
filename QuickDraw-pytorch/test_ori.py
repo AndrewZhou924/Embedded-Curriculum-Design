@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import transforms
 from tqdm import tqdm
-from PIL import Image, ImageFilter
+from PIL import Image
 from numpy import asarray
 # model - resnet34
 from Model.nets import resnet34
@@ -50,14 +50,10 @@ def imagePrepareAddCropping(image_path):
     np_image_crop = np_image[height_top:height_down, width_left:width_right]
     temp_image = Image.fromarray(np.uint8(np_image_crop))
     temp_image = temp_image.resize((64, 64), Image.ANTIALIAS)
-    # temp_image = np.asarray(temp_image) / 255.0
+    temp_image = np.asarray(temp_image) / 255.0
     im = Image.fromarray(np.uint8(temp_image))
     im = PIL.ImageOps.invert(im)
     im = im.resize((28, 28))
-    im = im.filter(ImageFilter.EDGE_ENHANCE )
-    im = im.filter(ImageFilter.EDGE_ENHANCE )
-
-    im.save('./tmp/testProcessImg.jpg')
     
     return im
 
@@ -142,15 +138,10 @@ if __name__ == '__main__':
             cls  = line.split('\t')[0].split(' ')[-1]
             classes.append(cls)
 
-    for c in classes:
-        print(c)
-
     # prepare test data
-    # data = Image.open(args.img).convert('L')
-    # data = PIL.ImageOps.invert(data)
-
-    data = imagePrepareAddCropping(args.img)    
-    # print(np.array(data))
+    data = Image.open(args.img).convert('L')
+    
+    print(np.array(data))
 
     data = data.resize((args.image_size, args.image_size))
 
