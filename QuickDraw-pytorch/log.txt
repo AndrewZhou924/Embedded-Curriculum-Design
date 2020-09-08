@@ -1,1 +1,0 @@
-{"Pretrain": "./Checkpoints/model.pytorch", "log": "./", "data_root": "Dataset", "image_size": 28, "ngpu": 1, "momentum": 0.9, "model": "resnet34", "learning_rate": 0.01, "gamma": 0.1, "batch_size": 512, "save_dir": "./Checkpoints", "test_bs": 256, "weight_decay": 0.0005, "lr_decay_step": [12, 20], "img": "./testData/test_9_gt_52.jpg", "epochs": 1000}
