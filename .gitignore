@@ -8,3 +8,12 @@ quickDraw/Dataset_bak
 quickDraw/Data
 quickDraw/Dataset
 realTimeData/
+checkpoints/
+pix2pix/debug*
+pix2pix/datasets/
+pix2pix/checkpoints/
+pix2pix/results/
+pix2pix/build/
+pix2pix/dist/
+GAN_tmp_img/
+GAN_tmp_results/
