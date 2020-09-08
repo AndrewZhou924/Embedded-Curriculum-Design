@@ -3,7 +3,6 @@ import argparse
 
 '''
     Usage:
-    python3 app/inference.py --file ./app/image/pred1.png
 '''
 
 def parse_args():

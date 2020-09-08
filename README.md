@@ -12,6 +12,24 @@ Visualization
 python3 visualization.py --file ./data/output.txt --show 1 --save 1
 ```
 
+English character & number recognition
+
+```
+python3 ./Embedded-Curriculum-Design/cnnRecognition/testEasyOcr.py --img ./Embedded-Curriculum-Design/cnnRecognition/app/image/en_words/interesting_clean2.jpg
+```
+
+Chinese character recognition
+
+````
+# single img
+python3 ./Embedded-Curriculum-Design/cnnRecognition/app/CNNinference.py --img ./Embedded-Curriculum-Design/cnnRecognition/app/image/pred1.png
+
+# a folder of imgs
+python3 ./Embedded-Curriculum-Design/cnnRecognition/app/CNNinference.py --folder ./Embedded-Curriculum-Design/cnnRecognition/app/image/all_single_cnn/
+````
+
+
+
 
 
 ## Issue
