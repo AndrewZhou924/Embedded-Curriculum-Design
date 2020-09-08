@@ -5,6 +5,8 @@ import easyocr
 import numpy as np
 from   PIL import Image
 from   cnnRecognition.app.CNNinference import *
+from   pix2pix.GAN_inference_warpper   import *
+from   quickDraw.quickDrawInference    import *
 
 # UART drive config
 STRGLO   = ""     # 读取的临时数据
@@ -16,7 +18,8 @@ scene    = 1      # 1处理串口，2直接处理数据
 
 # AI Algorithm model prepare
 CNNgraph, CNNsess = predictPrepare() 
-OCRreader = easyocr.Reader(['en'])
+OCRreader         = easyocr.Reader(['en'])
+quickDrawNet      = getQDmodel()
 print('*'*50)
 print('Load AI model sucessfully')
 
@@ -49,7 +52,7 @@ def SaveData(all_data,fileName):
     f.close()
     
 def createImg(all_data,fileName):
-    global SAVEIMG, CNNgraph, CNNsess, OCRreader
+    global SAVEIMG, CNNgraph, CNNsess, OCRreader, quickDrawNet
     
     all_data = str(all_data)
     all_data = all_data.split('fa ae ')[1]
@@ -82,12 +85,19 @@ def createImg(all_data,fileName):
         im.save(savePath)
         print("\n==> save to: ", savePath)
         
-    # test CNN TODO 
+    # TODO 
     CNNresult = chineseRecognizeSingleImageWithSess(CNNgraph, CNNsess, savePath)
     print("==> CNNresult: ", CNNresult['pred1_cnn'], CNNresult['pred1_accuracy'])
     
     ocrResult = OCRreader.readtext(savePath, detail=0)
     print("==> ocrResult: ", ocrResult)
+    
+    [pred, pred_cls] = QDinference(savePath, net=quickDrawNet)
+    print("==> quickDraw Result: ", pred, pred_cls)
+    
+    resultPath = GAN_generate(savePath)
+    resultImg  = Image.open(resultPath)
+    resultImg.show()
 
 def drawPoint(data_np,x,y):
     temp = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,0],[0,1],[1,-1],[1,0],[1,1]]

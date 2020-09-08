@@ -6,11 +6,6 @@ import inspect
 currentdir  = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 dataroot    = currentdir + '/GAN_tmp_img/'
 results_dir = currentdir + '/GAN_tmp_results/'  
-  
-
-# childrendir  = currentdir + "/pix2pix"
-# print(childrendir)
-# sys.path.insert(0, childrendir)
 
 def GAN_generate(img_path):
     if os.path.exists(dataroot):
@@ -25,7 +20,8 @@ def GAN_generate(img_path):
     # os.system('sh ./pix2pix/run.sh')
     
     paths = img_path.split('/')[-1].split('.')
-    resultPath = results_dir + 'edges2shoes_pretrained/test_latest/images/' + paths[0] + "_fake." + paths[-1]
+    # resultPath = results_dir + 'edges2shoes_pretrained/test_latest/images/' + paths[0] + "_fake." + paths[-1]
+    resultPath = results_dir + 'edges2shoes_pretrained/test_latest/images/' + paths[0] + "_fake.png"
     
     return resultPath
     
