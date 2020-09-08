@@ -7,3 +7,7 @@ if __name__ == "__main__":
     ENGresult  = recognizeEngAndNumber(imgPath)
     print("==> CNNresult:\n", CNNresult)
     print("==> ENGresult:\n", ENGresult)
+    
+    # test quickDraw
+    
+    # test GAN

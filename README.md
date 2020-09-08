@@ -28,6 +28,12 @@ python3 ./Embedded-Curriculum-Design/cnnRecognition/app/CNNinference.py --img ./
 python3 ./Embedded-Curriculum-Design/cnnRecognition/app/CNNinference.py --folder ./Embedded-Curriculum-Design/cnnRecognition/app/image/all_single_cnn/
 ````
 
+Your draw and I guess
+
+```
+python3 test_ori.py --Pretrain ./Checkpoints/model.pytorch --img ./testData/test_1_gt_36.jpg
+```
+
 
 
 
