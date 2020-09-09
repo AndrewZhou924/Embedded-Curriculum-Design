@@ -139,6 +139,12 @@ def parse_args():
     parser.add_argument('--log', type=str, default='./',
                         help='path of the log info.')
 
+    # tmp settings
+    parser.add_argument('--cnn',  '-cnn',  type=bool, default=False)
+    parser.add_argument('--en',   '-en',   type=bool, default=False)
+    parser.add_argument('--draw', '-draw', type=bool, default=False)
+    parser.add_argument('--gan',  '-gan',  type=bool, default=False)
+    
     args = parser.parse_args()
     return args
 

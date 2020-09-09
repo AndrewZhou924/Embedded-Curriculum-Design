@@ -8,6 +8,17 @@ from   cnnRecognition.app.CNNinference import *
 from   pix2pix.GAN_inference_warpper   import *
 from   quickDraw.quickDrawInference    import *
 
+def run_arg_parse():
+    parser = argparse.ArgumentParser(description='code for runing!',
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--cnn',  '-cnn',  type=bool, default=False)
+    parser.add_argument('--en',   '-en',   type=bool, default=False)
+    parser.add_argument('--draw', '-draw', type=bool, default=False)
+    parser.add_argument('--gan',  '-gan',  type=bool, default=False)
+    args = parser.parse_args()
+    
+    return args
+
 # UART drive config
 STRGLO   = ""     # 读取的临时数据
 all_data = ""     # 读取的总数据
@@ -15,6 +26,8 @@ BOOL     = True   # 读取标志位
 SAVEDATA = False  # 是否存储UART数据
 SAVEIMG  = True   # 是否存储IMG图片
 scene    = 1      # 1处理串口，2直接处理数据
+ARGS     = run_arg_parse()
+# print(ARGS)
 
 # AI Algorithm model prepare
 CNNgraph, CNNsess = predictPrepare() 
@@ -22,6 +35,8 @@ OCRreader         = easyocr.Reader(['en'])
 quickDrawNet      = getQDmodel()
 print('*'*50)
 print('Load AI model sucessfully')
+
+
 
 #读数代码本体实现
 def ReadData(ser):
@@ -52,7 +67,7 @@ def SaveData(all_data,fileName):
     f.close()
     
 def createImg(all_data,fileName):
-    global SAVEIMG, CNNgraph, CNNsess, OCRreader, quickDrawNet
+    global SAVEIMG, CNNgraph, CNNsess, OCRreader, quickDrawNet, ARGS
     
     all_data = str(all_data)
     all_data = all_data.split('fa ae ')[1]
@@ -85,19 +100,25 @@ def createImg(all_data,fileName):
         im.save(savePath)
         print("\n==> save to: ", savePath)
         
-    # TODO 
-    CNNresult = chineseRecognizeSingleImageWithSess(CNNgraph, CNNsess, savePath)
-    print("==> CNNresult: ", CNNresult['pred1_cnn'], CNNresult['pred1_accuracy'])
+    '''
+        Run AI algorithms
+    '''
+    if ARGS.cnn:
+        CNNresult = chineseRecognizeSingleImageWithSess(CNNgraph, CNNsess, savePath)
+        print("==> CNNresult: ", CNNresult['pred1_cnn'], CNNresult['pred1_accuracy'])
     
-    ocrResult = OCRreader.readtext(savePath, detail=0)
-    print("==> ocrResult: ", ocrResult)
+    if ARGS.en:
+        ocrResult = OCRreader.readtext(savePath, detail=0)
+        print("==> ocrResult: ", ocrResult)
     
-    [pred, pred_cls] = QDinference(savePath, net=quickDrawNet)
-    print("==> quickDraw Result: ", pred, pred_cls)
+    if ARGS.draw:
+        [pred, pred_cls] = QDinference(savePath, net=quickDrawNet)
+        print("==> quickDraw Result: ", pred, pred_cls)
     
-    resultPath = GAN_generate(savePath)
-    resultImg  = Image.open(resultPath)
-    resultImg.show()
+    if ARGS.gan:
+        resultPath = GAN_generate(savePath)
+        resultImg  = Image.open(resultPath)
+        resultImg.show()
 
 def drawPoint(data_np,x,y):
     temp = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,0],[0,1],[1,-1],[1,0],[1,1]]
@@ -143,6 +164,7 @@ def DReadPort():
     return str
 
 if __name__=="__main__":
+    
     if scene == 1:
 
         ser,ret = DOpenPort("/dev/ttyUSB0", 62500, None)
