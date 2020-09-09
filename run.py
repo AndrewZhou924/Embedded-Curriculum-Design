@@ -27,7 +27,6 @@ SAVEDATA = False  # 是否存储UART数据
 SAVEIMG  = True   # 是否存储IMG图片
 scene    = 1      # 1处理串口，2直接处理数据
 ARGS     = run_arg_parse()
-# print(ARGS)
 
 # AI Algorithm model prepare
 CNNgraph, CNNsess = predictPrepare() 
@@ -35,8 +34,6 @@ OCRreader         = easyocr.Reader(['en'])
 quickDrawNet      = getQDmodel()
 print('*'*50)
 print('Load AI model sucessfully')
-
-
 
 #读数代码本体实现
 def ReadData(ser):
@@ -164,19 +161,18 @@ def DReadPort():
     return str
 
 if __name__=="__main__":
-    
+    # check folder
+    if not os.path.exists('./realTimeData/'):
+        os.mkdir('./realTimeData/')
+        
     if scene == 1:
 
         ser,ret = DOpenPort("/dev/ttyUSB0", 62500, None)
-        
-        if(ret == True):#判断串口是否成功打开
+        if(ret == True): # 判断串口是否成功打开
             while(1):
                 time.sleep(5)
-                
-                # print("读取数据:"+DReadPort()) #读串口数据
-                # DColsePort(ser)  #关闭串口
 
-    elif scene ==2:
+    elif scene == 2:
         f = open('test.txt', 'r')
         all_string = ""
         for line in f.readlines(): 
