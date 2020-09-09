@@ -8,13 +8,41 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import transforms
 from tqdm import tqdm
-from PIL import Image
+from PIL import Image, ImageFilter
 from numpy import asarray
+
 # model - resnet34
 from .Model.nets import resnet34
 from .Model.nets import convnet
+# from Model.nets import resnet34
+# from Model.nets import convnet
+
 # dataset
 from .DataUtils.load_data import QD_Dataset
+# from DataUtils.load_data import QD_Dataset
+
+ 
+def processing(img, filterList):
+    for f in filterList:
+        if   f == 'MedianFilter':
+            Image_filter = ImageFilter.MedianFilter
+        elif f == 'GaussianBlur':
+            Image_filter = ImageFilter.GaussianBlur
+        elif f == 'BLUR':
+            Image_filter = ImageFilter.BLUR
+        elif f == 'SHARPEN':
+            Image_filter = ImageFilter.SHARPEN
+        elif f == 'DETAIL':
+            Image_filter = ImageFilter.DETAIL
+        elif f == 'EDGE_ENHANCE':
+            Image_filter = ImageFilter.EDGE_ENHANCE 
+        elif f == 'ModeFilter':
+            Image_filter = ImageFilter.ModeFilter(size=5)
+            
+            
+        img = img.filter(Image_filter)
+    
+    return img
 
 def imagePrepareAddCropping(image_path):
     temp_image      = Image.open(image_path).convert('L')
@@ -47,13 +75,25 @@ def imagePrepareAddCropping(image_path):
             break
         width_right -= 1
 
-    np_image_crop = np_image[height_top:height_down, width_left:width_right]
-    temp_image = Image.fromarray(np.uint8(np_image_crop))
-    temp_image = temp_image.resize((64, 64), Image.ANTIALIAS)
-    temp_image = np.asarray(temp_image) / 255.0
-    im = Image.fromarray(np.uint8(temp_image))
+    ProcessList = [
+    'MedianFilter',
+    'SHARPEN',
+    'SHARPEN',  
+    ]
+    
+    ProcessList2 = [
+    'SHARPEN',
+    'SHARPEN',
+    ]
+    
+    np_image_crop = np_image[height_top:height_down, width_left:width_right]        
+    im = Image.fromarray(np.uint8(np_image_crop))
+    
     im = PIL.ImageOps.invert(im)
-    im = im.resize((28, 28))
+    im = processing(im, ProcessList)
+    
+    im = im.resize((28, 28),Image.ANTIALIAS)
+    im = processing(im, ProcessList2)
     
     return im
 
@@ -134,8 +174,13 @@ def QDinference(imgPath, net=None):
             classes.append(cls)
 
     # prepare test data
-    data = Image.open(args.img).convert('L')
-    data = PIL.ImageOps.invert(data)
+    # data = Image.open(args.img).convert('L')
+    # data = PIL.ImageOps.invert(data)
+    
+    data = imagePrepareAddCropping(args.img)
+    # data.save('./QD_tmp.jpg')
+    # data.show()
+    
     data = data.resize((args.image_size, args.image_size))
     data = transforms.ToTensor()(data)
     data = torch.autograd.Variable(data.cuda())
@@ -156,3 +201,4 @@ def QDinference(imgPath, net=None):
 if __name__ == '__main__':
     imgPath = './quickDraw/testData/new/cat.jpg'
     [pred, pred_cls] = QDinference(imgPath)
+    print(pred, pred_cls)

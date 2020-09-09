@@ -41,7 +41,7 @@ if __name__ == '__main__':
     if opt.load_iter > 0:  # load_iter is 0 by default
         web_dir = '{:s}_iter{:d}'.format(web_dir, opt.load_iter)
         
-    print('creating web directory', web_dir)
+    # print('creating web directory', web_dir)
     webpage = html.HTML(web_dir, 'Experiment = %s, Phase = %s, Epoch = %s' % (opt.name, opt.phase, opt.epoch))
     # test with eval mode. This only affects layers like batchnorm and dropout.
     # For [pix2pix]: we use batchnorm and dropout in the original pix2pix. You can experiment it with and without eval() mode.
@@ -54,7 +54,7 @@ if __name__ == '__main__':
         if i >= opt.num_test:  # only apply our model to opt.num_test images.
             break
         
-        print(data['A'].shape) # [1, 3, 256, 256]
+        # print(data['A'].shape) # [1, 3, 256, 256]
         # print(data['B'].shape)
         # a = input()
         
