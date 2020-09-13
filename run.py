@@ -110,7 +110,7 @@ def createImg(all_data,fileName):
     if ARGS.cnn:
         CNNresult = chineseRecognizeSingleImageWithSess(CNNgraph, CNNsess, savePath)
         top1Acc   = CNNresult['pred1_acc_float']
-        if float(top1Acc) > 0.3:
+        if float(top1Acc) > 0.1:
             print("==> CNNresult: ", CNNresult['pred1_cnn'], CNNresult['pred1_accuracy'])
             
             # show combined image
@@ -137,12 +137,12 @@ def createImg(all_data,fileName):
     if ARGS.en:
         ocrResult = OCRreader.readtext(savePath)
         for res in ocrResult:
-            if res[2] > 0.7:
+            if res[2] > 0.1:
                 print("==> OCR Result: ", res[1])
     
     if ARGS.draw:
         [pred, pred_cls, pred_conf] = QDinference(savePath, net=quickDrawNet)
-        if pred_conf > 0.4:
+        if pred_conf > 0.2:
             # print("==> quickDraw Result: ", pred, pred_cls)
             print("==> [你画我猜结果]: {}, 置信度: {:.2%}".format(pred_cls, pred_conf))
             
