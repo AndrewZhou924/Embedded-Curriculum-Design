@@ -131,10 +131,8 @@ def createImg(all_data,fileName):
             print(randomBadComment)
     
     '''
-        [
-        ([[67, 125], [185, 125], [185, 213], [67, 213]], 'I>', 0.18000823259353638), 
+        0: bbox  1: result  2: confidence
         ([[26, 382], [84, 382], [84, 436], [26, 436]], 'i2', 0.8742373585700989)
-        ]
     '''
     if ARGS.en:
         ocrResult = OCRreader.readtext(savePath)
@@ -157,8 +155,15 @@ def createImg(all_data,fileName):
     
     if ARGS.gan:
         resultPath = GAN_generate(savePath)
-        resultImg  = Image.open(resultPath)
-        resultImg.show()
+        # resultImg  = Image.open(resultPath)
+        # resultImg.show()
+        
+        pred_img = Image.open(resultPath).resize((480, 480))
+        ori_img  = Image.open(savePath)
+        target   = Image.new('RGB', (800, 480))
+        target.paste(ori_img,  (0,  0,320,480))
+        target.paste(pred_img, (320,0,800,480))
+        target.show()
 
 def drawPoint(data_np,x,y):
     temp = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,0],[0,1],[1,-1],[1,0],[1,1]]

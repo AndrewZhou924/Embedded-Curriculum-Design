@@ -1,10 +1,25 @@
 # Embedded-Curriculum-Design
 
-Members: [Ziqing Pan](<https://github.com/OzwardPenrose>), [Yongwei Wang](<https://github.com/canian1999>), [Zhanke Zhou](<https://github.com/AndrewZhou924>)
+*Advisor: Guohui Zhong*
+
+*Members: [Ziqing Pan](<https://github.com/OzwardPenrose>), [Yongwei Wang](<https://github.com/canian1999>), [Zhanke Zhou](<https://github.com/AndrewZhou924>)*
 
 
 
 ## Usage
+
+Quick start
+
+```
+# character recognition
+./tools/run_cnn_en.sh
+
+# draw and guess 
+./tools/run_draw.sh
+
+# image generation via GAN
+./tools/run_gan.sh
+```
 
 Visualization
 
@@ -33,8 +48,6 @@ Your draw and I guess
 ```
 python3 test_ori.py --Pretrain ./Checkpoints/model.pytorch --img ./testData/test_1_gt_36.jpg
 ```
-
-
 
 
 
