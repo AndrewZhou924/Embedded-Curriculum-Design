@@ -35,6 +35,12 @@ quickDrawNet      = getQDmodel()
 print('*'*50)
 print('Load AI model sucessfully')
 
+# random responce
+cnnSureResponce    = ["好字!", "你写的字也太好了~", "这字, 爱了爱了~"]
+cnnUnsureResponce  = ["大兄弟,你这写的是啥?", "这字,你是在难为我胖虎!?", "建议多练练硬笔书法~"]
+drawUnsureResponce = ["您就是抽象派?", "抱歉,我实在猜不出来", "这画可真难倒我了"]
+drawSureResponce   = ["画的针不绰", "这下我该猜对了吧 O(∩_∩)O"]
+
 #读数代码本体实现
 def ReadData(ser):
     global STRGLO,BOOL, all_data, SAVEDATA
@@ -95,22 +101,59 @@ def createImg(all_data,fileName):
     if SAVEIMG:
         savePath = "./realTimeData/" + fileName.replace('.txt', '.jpg')
         im.save(savePath)
-        print("\n==> save to: ", savePath)
+        print("\n==> save img to: ", savePath)
         
     '''
         Run AI algorithms
     '''
+    # Chinese character recognition
     if ARGS.cnn:
         CNNresult = chineseRecognizeSingleImageWithSess(CNNgraph, CNNsess, savePath)
-        print("==> CNNresult: ", CNNresult['pred1_cnn'], CNNresult['pred1_accuracy'])
+        top1Acc   = CNNresult['pred1_acc_float']
+        if float(top1Acc) > 0.3:
+            print("==> CNNresult: ", CNNresult['pred1_cnn'], CNNresult['pred1_accuracy'])
+            
+            # show combined image
+            pred1_image_file = CNNresult['pred1_image']
+            pred_img = Image.open(pred1_image_file).resize((480, 480))
+            ori_img  = Image.open(savePath)
+            target   = Image.new('RGB', (800, 480))
+            target.paste(ori_img,  (0,  0,320,480))
+            target.paste(pred_img, (320,0,800,480))
+            target.show()
+            
+            if top1Acc > 0.7:
+                randomGoodComment = "AI助理(*^__^*): " + cnnSureResponce[np.random.randint(0, len(cnnSureResponce))] 
+                print(randomGoodComment)
+        
+        else:
+            randomBadComment = "AI助理(*^__^*): " + cnnUnsureResponce[np.random.randint(0, len(cnnUnsureResponce))]
+            print(randomBadComment)
     
+    '''
+        [
+        ([[67, 125], [185, 125], [185, 213], [67, 213]], 'I>', 0.18000823259353638), 
+        ([[26, 382], [84, 382], [84, 436], [26, 436]], 'i2', 0.8742373585700989)
+        ]
+    '''
     if ARGS.en:
-        ocrResult = OCRreader.readtext(savePath, detail=0)
-        print("==> ocrResult: ", ocrResult)
+        ocrResult = OCRreader.readtext(savePath)
+        for res in ocrResult:
+            if res[2] > 0.7:
+                print("==> OCR Result: ", res[1])
     
     if ARGS.draw:
-        [pred, pred_cls] = QDinference(savePath, net=quickDrawNet)
-        print("==> quickDraw Result: ", pred, pred_cls)
+        [pred, pred_cls, pred_conf] = QDinference(savePath, net=quickDrawNet)
+        if pred_conf > 0.4:
+            # print("==> quickDraw Result: ", pred, pred_cls)
+            print("==> [你画我猜结果]: {}, 置信度: {:.2%}".format(pred_cls, pred_conf))
+            
+            if pred_conf > 0.7:
+                randomGoodComment = "AI助理(*^__^*): " + drawSureResponce[np.random.randint(0, len(drawSureResponce))]
+                print(randomGoodComment)
+        else:
+            randomBadComment = "AI助理(*^__^*): " + drawUnsureResponce[np.random.randint(0, len(drawUnsureResponce))]
+            print(randomBadComment)
     
     if ARGS.gan:
         resultPath = GAN_generate(savePath)

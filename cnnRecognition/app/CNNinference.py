@@ -153,15 +153,19 @@ def chineseRecognizeSingleImage(imgPath=__test_image_file):
     info = dict()
     info['pred1_image']    = "data:image/jpg;base64," + pred1_image.decode()
     info['pred1_accuracy'] = str('{:.2%}'.format(predict_val[0][0]))
+    info['pred1_acc_float']= float(predict_val[0][0])
     info['pred1_cnn']      = word_dict[predict_index[0][0]]
+    info['pred1_image']    = __pred1_image_file
     
     info['pred2_image']    = "data:image/jpg;base64," + pred2_image.decode()
     info['pred2_accuracy'] = str('{:.2%}'.format(predict_val[0][1]))
     info['pred2_cnn']      = word_dict[predict_index[0][1]]
+    info['pred2_image']    = __pred2_image_file
                                        
     info['pred3_image']    = "data:image/jpg;base64," + pred3_image.decode()
     info['pred3_accuracy'] = str('{:.2%}'.format(predict_val[0][2]))
     info['pred3_cnn']      = word_dict[predict_index[0][2]]
+    info['pred3_image']    = __pred3_image_file
 
     newtime = datetime.datetime.now()
     print ('相差：%s'%(newtime-oldtime))
@@ -202,7 +206,9 @@ def chineseRecognizeSingleImageWithSess(__graph1, __sess1, imgPath=__test_image_
     info = dict()
     info['pred1_image']    = "data:image/jpg;base64," + pred1_image.decode()
     info['pred1_accuracy'] = str('{:.2%}'.format(predict_val[0][0]))
+    info['pred1_acc_float']= float(predict_val[0][0])
     info['pred1_cnn']      = word_dict[predict_index[0][0]]
+    info['pred1_image']    = __pred1_image_file
     
     info['pred2_image']    = "data:image/jpg;base64," + pred2_image.decode()
     info['pred2_accuracy'] = str('{:.2%}'.format(predict_val[0][1]))

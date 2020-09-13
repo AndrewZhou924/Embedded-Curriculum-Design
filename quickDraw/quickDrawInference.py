@@ -194,15 +194,17 @@ def QDinference(imgPath, net=None):
     # data /= 255.0
     
     # inference
-    output   = net(data)
-    pred     = int(output.data.max(1)[1])
-    pred_cls = classes[pred]
+    output      = net(data)
+    output.data = output.data.softmax(-1)
+    pred        = int(output.data.max(1)[1])
+    pred_cls    = classes[pred]
+    pred_conf   = float(output.data.max(1)[0])
 
     # print("*"*50)
     # print("==> Test result:")
     # print("==> imgPath: {}, pred: {}, cls: {}".format(args.img, pred, pred_cls))
     
-    return [pred, pred_cls]
+    return [pred, pred_cls, pred_conf]
     
 if __name__ == '__main__':
     imgPath = './quickDraw/testData/new/cat.jpg'
